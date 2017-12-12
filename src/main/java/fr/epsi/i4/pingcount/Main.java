@@ -1,27 +1,26 @@
 package fr.epsi.i4.pingcount;
 
+import fr.epsi.i4.pingcount.ws.Config;
 import fr.epsi.i4.pingcount.ws.PingCount;
 import io.sentry.Sentry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
 @SpringBootApplication
 public class Main {
 
     private static String port;
 
+    public static String dsn;
+
     public static void main(String[] args) {
-        Sentry.init();
+        Sentry.init(dsn);
 
         SpringApplication.run(Main.class, args);
 
         String msg = "Services PingCount disponibles à l'adresse http://localhost:" + port + PingCount.basePath;
+        msg += "\nServices Config disponibles à l'adresse http://localhost:" + port + Config.basePath;
 
         System.out.println(msg);
 
@@ -33,4 +32,8 @@ public class Main {
         port = value;
     }
 
+    @Value("${sentry.dsn}")
+    public void setDsn(String value) {
+        dsn = value;
+    }
 }
