@@ -25,6 +25,20 @@ public class Main {
         System.out.println(msg);
 
         Sentry.capture(msg);
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                String msg = "Services PingCount et Config fermés";
+                Sentry.capture(msg);
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(msg);
+            }
+        });
     }
 
     @Value("${server.port}")
